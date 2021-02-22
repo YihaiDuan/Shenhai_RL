@@ -7,10 +7,8 @@
 """
 import collections
 import random
+import torch
 a = collections.deque(maxlen=10)
 
-for i in range(15):
-    a.append(i)
-
-b = random.sample(a, 3)
-print(b)
+a = torch.tensor([[2,1,3], [2, 5, 3]])
+print(a.max(1)[0])

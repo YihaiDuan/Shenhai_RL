@@ -23,7 +23,7 @@ class ReplayBuffer():
         s_list, a_list, r_list, s_next_list, done_list = [], [], [], [], []
         for transition in mini_batch:
             s, a, r, s_next, done = transition
-            done = 0 if done else 1
+            done = 0.0 if done else 1.0
             s_list.append(s)
             a_list.append([a])
             r_list.append([r])
