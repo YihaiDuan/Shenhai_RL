@@ -58,8 +58,10 @@ class DDPG(object):
     def train(self, buffer):
         mini_batch = buffer.sample(self.batch_size)
         s, a, r, s_next, done = mini_batch
+
         target = r + self.gamma * self.q_target(s_next, self.mu_target(s_next)) * done
         q_loss = F.smooth_l1_loss(self.q(s, a), target)
+
         self.q_optimizer.zero_grad()
         q_loss.backward()
         self.q_optimizer.step()

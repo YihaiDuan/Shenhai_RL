@@ -17,8 +17,8 @@ class QNet(nn.Module):
     def __init__(self, state_dim, num_actions):
         super(QNet, self).__init__()
         self.fc1 = nn.Linear(state_dim, 128)
-        self.fc2 = nn.Linear(128, 256)
-        self.fc3 = nn.Linear(256, num_actions)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, num_actions)
 
     def forward(self, input):
         x = F.relu(self.fc1(input))

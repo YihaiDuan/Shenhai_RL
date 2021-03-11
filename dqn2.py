@@ -15,7 +15,7 @@ import gym
 import argparse
 import numpy as np
 from utils import loadLogger
-from memory import ReplayBuffer
+from memory import ReplayBuffer, TorchReplayBuffer
 from utils import str2bool
 import tensorboard_easy as te
 from dqn_policy import DQN
@@ -32,7 +32,7 @@ def get_args():
     parser.add_argument('--buffer_size', type=int, default=50000, help='Replay Buffer size')
     parser.add_argument('--update_interval', type=int, default=20, help='update qnet_target interval')
     parser.add_argument('--load_model', type=str2bool, default='false', help='weather load model to continue')
-    parser.add_argument('--info_dir', type=str, default='info/dqn')
+    parser.add_argument('--info_dir', type=str, default='info/dqn/')
     parser.add_argument('--te_dir', type=str, default='te/dqn')
     parser.add_argument('--config_name', type=str, default='config.conf')
     args = parser.parse_args()
@@ -77,7 +77,7 @@ def main():
     dqn = DQN()
 
     # 3. Initialize Replay Buffer
-    memory = ReplayBuffer(args.buffer_size)
+    memory = TorchReplayBuffer(args.buffer_size, env.observation_space.shape, env.action_space)
 
 
     step = 0
@@ -92,8 +92,9 @@ def main():
         while not done:
             action = dqn.select_action(torch.from_numpy(s).float())
             s_next, r, done, info = env.step(action)
-            transition = (s, action, r/100.0, s_next, done)
-            memory.add(transition)
+            done_mask = 0.0 if done else 1.0
+            transition = (torch.tensor(s), torch.tensor([action]), torch.tensor([r/100.0]), torch.tensor(s_next), torch.tensor([done_mask]))
+            memory.add(*transition)
             s = s_next
             reward += r
             step += 1
