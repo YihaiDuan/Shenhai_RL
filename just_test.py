@@ -21,8 +21,10 @@ import gym
 # print(env.observation_space)
 from PIL import Image
 import matplotlib.pyplot as plt
+import cdt
 a = torch.zeros(3, dtype=torch.long)
 print(a)
+print(cdt.utils.Settings.SETTINGS.get_default(rpath=None))
 # from torchvision import datasets, transforms
 # trans_f = transforms.Compose([
 #             transforms.CenterCrop(128),
@@ -44,4 +46,11 @@ print(a)
 #     exit()
 
 # print(c)
+import torch
+img = torch.rand(size=(3, 64, 64))
+z = Encoder(img)
+
+position = torch.ceil(z[:8])   # float
+
+img[position]
 
